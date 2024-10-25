@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption, Decryption & Web Scraper</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f4c7e, #22020c);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            display: none;
+            margin-top: 20px;
+        }
+        textarea, input {
+            width: 80%;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            resize: none;
+        }
+        textarea {
+            height: 250px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            background-color: #ff7043;
+            color: white;
+            cursor: pointer;
+        }
+        .output {
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            word-wrap: break-word;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Encryption, Decryption & Web Scraper</h1>
+    <nav>
+        <button onclick="showSection('encryptSection')">Encrypt</button>
+        <button onclick="showSection('decryptSection')">Decrypt</button>
+        <button onclick="showSection('scrapeSection')">Web Scraper</button>
+    </nav>
+
+    <!-- Encrypt Section -->
+    <div class="container" id="encryptSection">
+        <h2>Encrypt Your Code</h2>
+        <textarea id="encryptInput" placeholder="Enter JavaScript, HTML, CSS..."></textarea>
+        <button onclick="encryptText()">Encrypt</button>
+        <button onclick="copyText('encryptOutput')">Copy</button>
+        <div class="output" id="encryptOutput"></div>
+    </div>
+
+    <!-- Decrypt Section -->
+    <div class="container" id="decryptSection">
+        <h2>Decrypt Your Code</h2>
+        <textarea id="decryptInput" placeholder="Enter encrypted text..."></textarea>
+        <button onclick="decryptText()">Decrypt</button>
+        <button onclick="copyText('decryptOutput')">Copy</button>
+        <div class="output" id="decryptOutput"></div>
+    </div>
+
+    <!-- Web Scraper Section -->
+    <div class="container" id="scrapeSection">
+        <h2>Web Scraper</h2>
+        <input id="urlInput" placeholder="Enter website URL..."/>
+        <button onclick="fetchWebsite()">Fetch HTML</button>
+        <button onclick="copyText('scrapeOutput')">Copy</button>
+        <div class="output" id="scrapeOutput"></div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.container').forEach(container => {
+                container.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        function encryptText() {
+            const input = document.getElementById('encryptInput').value;
+            const encrypted = btoa(input);
+            document.getElementById('encryptOutput').innerText = encrypted;
+        }
+
+        function decryptText() {
+            const input = document.getElementById('decryptInput').value;
+            try {
+                const decrypted = atob(input);
+                document.getElementById('decryptOutput').innerText = decrypted;
+            } catch {
+                document.getElementById('decryptOutput').innerText = 'Invalid encrypted text!';
+            }
+        }
+
+        async function fetchWebsite() {
+            const url = document.getElementById('urlInput').value;
+            try {
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                document.getElementById('scrapeOutput').innerText = data.contents;
+            } catch {
+                document.getElementById('scrapeOutput').innerText = 'Failed to fetch website content!';
+            }
+        }
+
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+        }
+    </script>
+</body>
+</html>
